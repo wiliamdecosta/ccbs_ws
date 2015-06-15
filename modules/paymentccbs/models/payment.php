@@ -25,24 +25,18 @@ class payment extends AbstractTable{
     public $refs = array();
     
     /* select from clause for getAll and countAll */
-    public $selectClause = "SELECT *";
+    public $selectClause = "";
 
-    public $fromClause = "FROM p_bank";
+    public $fromClause = "";
     
     public $dbconn = null;
     
     function __construct(){
         try {
-            $this->dbconn = NewADOConnection( wbConfig::get('DB.type') );    
-            $tns = wbConfig::get('DB.tns');
-            $username = wbConfig::get('DB.user');
-            $password = wbConfig::get('DB.password');
-            $this->dbconn->Connect($tns, $username, $password);
-            $this->likeOperator = " LIKE ";
+            parent::__construct();
         }catch(ADODB_Exception  $e){
             throw new Exception("Database Connection Error");   
         }
-        
    	}
     
     /**

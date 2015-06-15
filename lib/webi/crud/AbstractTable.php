@@ -37,9 +37,18 @@ abstract class AbstractTable{
     public $likeOperator = '';
     
     function __construct(){
-        $this->dbconn =& wbDB::getConn();
+        
+        $dbConnParams = array(
+            'type' => wbConfig::get('DB.type'),
+            'tns' => wbConfig::get('DB.tns'),
+            'user' => wbConfig::get('DB.user'),
+            'password' => wbConfig::get('DB.password')
+        );
+        wbDB::init($dbConnParams);
+        $this->dbconn = & wbDB::getConn();
+        
         if (count($this->displayFields)){
-            if ($this->dbconn->dataProvider == 'mysql') {
+            if ($this->dbconn->dataProvider == 'mysql' || $this->dbconn->dataProvider == 'oci8' ) {
                 $this->selectClause .= ", CONCAT(".implode(", ' - ' ,", $this->displayFields).") AS _display_field_";
                 $this->likeOperator = " LIKE ";
             }else if ($this->dbconn->dataProvider == 'postgres') {
@@ -48,7 +57,7 @@ abstract class AbstractTable{
             }
         }
         
-        if ($this->dbconn->dataProvider == 'mysql') {
+        if ($this->dbconn->dataProvider == 'mysql' || $this->dbconn->dataProvider == 'oci8') {
             $this->likeOperator = " LIKE ";    
         }else if ($this->dbconn->dataProvider == 'postgres') {
             $this->likeOperator = " ILIKE ";   
