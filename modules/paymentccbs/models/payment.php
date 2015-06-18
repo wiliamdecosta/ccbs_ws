@@ -20,7 +20,7 @@ class payment extends AbstractTable{
     /* Details table */
     public $details = array();
     /* Primary key */
-    public $pkey = 'p_bank_id';
+    public $pkey = '';
     /* References */    
     public $refs = array();
     
@@ -35,7 +35,7 @@ class payment extends AbstractTable{
         try {
             parent::__construct();
         }catch(ADODB_Exception  $e){
-            throw new Exception("Database Connection Error");   
+            throw new Exception("Database Connection Error");
         }
    	}
     
