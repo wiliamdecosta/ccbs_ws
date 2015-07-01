@@ -15,7 +15,7 @@ class wbDB extends Object{
         self::$dbConnParams = $params;
         
         self::$dbConn =& ADONewConnection(self::$dbConnParams['type']);
-        self::$dbConn->Connect(self::$dbConnParams['tns'], self::$dbConnParams['user'], self::$dbConnParams['password']);
+        self::$dbConn->Connect(self::$dbConnParams['host'], self::$dbConnParams['user'], self::$dbConnParams['password'], self::$dbConnParams['name']);
         
         return true;
     }   
