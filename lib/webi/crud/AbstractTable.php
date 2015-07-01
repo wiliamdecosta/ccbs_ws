@@ -39,10 +39,11 @@ abstract class AbstractTable{
     function __construct(){
         
         $dbConnParams = array(
-            'type' => wbConfig::get('DB.type'),
-            'tns' => wbConfig::get('DB.tns'),
+            'name' => wbConfig::get('DB.name'),
             'user' => wbConfig::get('DB.user'),
-            'password' => wbConfig::get('DB.password')
+            'password' => wbConfig::get('DB.password'),
+            'host' => wbConfig::get('DB.host'),
+            'type' => wbConfig::get('DB.type')
         );
         wbDB::init($dbConnParams);
         $this->dbconn = & wbDB::getConn();
