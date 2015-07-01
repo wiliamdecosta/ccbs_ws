@@ -63,7 +63,7 @@ class payment_controller extends wbController{
         
         /* post params */
         $service_no = wbRequest::getVarClean('service_no', 'str', '');
-        $action = wbRequest::getVarClean('action', 'str', 'QUERY');
+        $action = wbRequest::getVarClean('action', 'str', 'query');
         $i_id = wbRequest::getVarClean('i_id', 'str', '');
 
         $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
@@ -73,14 +73,28 @@ class payment_controller extends wbController{
             $items = array();
             $table =& wbModule::getModel('paymentccbs', 'payment');
             
-            $result = $table->executeStpPayAcc($service_no, $action, $start, $limit, $i_id);
+            $table->dbconn->fetchMode = PGSQL_NUM;
+            $query = "SELECT * FROM ifp.f_pay_acc(?,?,?,?,?)";
+            $result =& $table->dbconn->Execute($query, array($service_no, $action, $start, $limit, $i_id));
             
-        	$data['items'] = $result['rows'];
-            $data['total'] = $result['total'];
+            $rows = $result->fields;
+            
+            if( isset ($rows['cnt']) ) {
+                if( $rows['cnt'] == 0 ) {
+                    $data['items'] = array();
+                }else {
+                    $data['items'] = array($rows);    
+                }
+                $data['total'] = $rows['cnt']; 
+                $data['message'] = $rows['msg'];
+            }else {
+                $data['items'] = $rows;
+                $data['total'] = $rows[0]['cnt']; 
+                $data['message'] = $rows[0]['msg'];
+            }
+                    	
             $data['current'] = $page;
             $data['rowCount'] = $limit;
-    
-            $data['message'] = $result['o_msg'];
             $data['success'] = true;
 
         }catch(Exception $e){
