@@ -80,11 +80,11 @@ class payment_controller extends wbController{
             $rows = $result->fields;
             
             if( isset ($rows['cnt']) ) {
-                //if( $rows['cnt'] == 0 ) {
-                //    $data['items'] = array();
-                //}else {
+                if( $rows['cnt'] == 0 ) {
+                    $data['items'] = array();
+                }else {
                     $data['items'] = array($rows);    
-                //}
+                }
                 $data['total'] = $rows['cnt']; 
                 $data['message'] = $rows['msg'];
             }else {
