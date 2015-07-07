@@ -30,22 +30,22 @@ class payment_controller extends wbController{
 
             $items = $table->getAll($start, $limit, $sort, $dir);
             $total = $table->countAll();
-            
-            
+
+
             $data['items'] = $items;
             $data['total'] = $total;
             $data['current'] = $page;
             $data['rowCount'] = $limit;
-    
+
             $data['message'] = '';
             $data['success'] = true;
-        
+
         }catch(Exception $e){
             $data['message'] = $e->getMessage();
             $data['success'] = false;
         }
 
-        
+
         return $data;
     }
 
@@ -60,7 +60,7 @@ class payment_controller extends wbController{
         $sort = wbRequest::getVarClean('sortby', 'str', '');
         $dir = wbRequest::getVarClean('sortdir', 'str', 'ASC');
         $searchPhrase = wbRequest::getVarClean('searchPhrase', 'str', '');
-        
+
         /* post params */
         $service_no = wbRequest::getVarClean('service_no', 'str', '');
         $action = wbRequest::getVarClean('action', 'str', 'query');
@@ -72,30 +72,38 @@ class payment_controller extends wbController{
         try{
             $items = array();
             $table =& wbModule::getModel('paymentccbs', 'payment');
-            
+
             $table->dbconn->fetchMode = PGSQL_NUM;
             $query = "SELECT * FROM ifp.f_pay_acc(?,?,?,?,?)";
             $result =& $table->dbconn->Execute($query, array($service_no, $action, $start, $limit, $i_id));
-            
+
             $rows = $result->fields;
-            
+
             if( isset ($rows['cnt']) ) {
+                
+                $data['total'] = $rows['cnt'];
+                $data['message'] = $rows['msg'];
+                $data['success'] = true;
+                
                 if( $rows['cnt'] == 0 ) {
                     $data['items'] = array();
+                    if(substr($rows['msg'],0,5) == 'ERROR') {
+                        $data['success'] = false;        
+                    }
                 }else {
-                    $data['items'] = array($rows);    
+                    $data['items'] = array($rows);
                 }
-                $data['total'] = $rows['cnt']; 
-                $data['message'] = $rows['msg'];
+                
             }else {
                 $data['items'] = $rows;
-                $data['total'] = $rows[0]['cnt']; 
+                $data['total'] = $rows[0]['cnt'];
                 $data['message'] = $rows[0]['msg'];
+                $data['success'] = true;
             }
-                    	
+
             $data['current'] = $page;
             $data['rowCount'] = $limit;
-            $data['success'] = true;
+            
 
         }catch(Exception $e){
             $data['message'] = $e->getMessage();
