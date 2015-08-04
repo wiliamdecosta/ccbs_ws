@@ -63,19 +63,37 @@ class payment_controller extends wbController{
 
         /* post params */
         $service_no = wbRequest::getVarClean('service_no', 'str', '');
+        $p_bank_branch_id = wbRequest::getVarClean('p_bank_branch_id', 'int', 0);
         $action = wbRequest::getVarClean('action', 'str', 'query');
-        $i_id = wbRequest::getVarClean('i_id', 'str', '');
-
+        $i_id = wbRequest::getVarClean('i_id', 'array', array());
+        $i_subscriberid = wbRequest::getVarClean('i_subscriberid', 'int', 0);
+        $cboxdeposit = wbRequest::getVarClean('cboxdeposit', 'str', 'N');
+        
+        
+        /* make $i_id with comma separated */
+        $idList = "";
+        $prefix = "";
+        foreach ($i_id as $theid){
+            $idList .= $prefix . "'" . $theid . "'";
+            $prefix = ", ";
+        }
+        
         $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
         $start = ($page-1) * $limit;
-
+        
+        /*$data['message'] .= "action: ".$action."</br>";
+        $data['message'] .= "service_no: ".$service_no."</br>";
+        $data['message'] .= "id: ".$idList."</br>";
+        $data['message'] .= "p_bank_branch_id: ".$p_bank_branch_id."</br>";
+        return $data;*/
+        
         try{
             $items = array();
             $table =& wbModule::getModel('paymentccbs', 'payment');
 
             $table->dbconn->fetchMode = PGSQL_NUM;
-            $query = "SELECT * FROM ifp.f_pay_acc(?,?,?,?,?)";
-            $result =& $table->dbconn->Execute($query, array($service_no, $action, $start, $limit, $i_id));
+            $query = "SELECT * FROM ifp.f_pay_acc(?,?,?,?,?,?,?,?)"; /* tambahkan subscriber id, use_deposit */
+            $result =& $table->dbconn->Execute($query, array($service_no, $p_bank_branch_id, $action, $start, $limit, $idList, $i_subscriberid, $cboxdeposit));
 
             $rows = $result->fields;
 
