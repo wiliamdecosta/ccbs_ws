@@ -92,8 +92,8 @@ class payment_controller extends wbController{
             $table =& wbModule::getModel('paymentccbs', 'payment');
 
             $table->dbconn->fetchMode = PGSQL_NUM;
-            $query = "SELECT * FROM ifp.f_pay_acc(?,?,?,?,?,?,?,?)"; /* tambahkan subscriber id, use_deposit */
-            $result =& $table->dbconn->Execute($query, array($service_no, $p_bank_branch_id, $action, $start, $limit, $idList, $i_subscriberid, $cboxdeposit));
+            $query = "SELECT * FROM ifp.f_pay_acc(?,?,?,?,?,?,?,?,?,?,?,?)"; /* tambahkan subscriber id, use_deposit */
+            $result =& $table->dbconn->Execute($query, array($action, $service_no, $start, $limit, $idList, 2,'ADMIN', $p_bank_branch_id, '192.168.1.7', $i_subscriberid, $cboxdeposit, strtoupper(date("d-M-Y"))));
 
             $rows = $result->fields;
 
