@@ -69,6 +69,9 @@ class payment_controller extends wbController{
         $i_subscriberid = wbRequest::getVarClean('i_subscriberid', 'int', 0);
         $cboxdeposit = wbRequest::getVarClean('cboxdeposit', 'str', 'N');
         
+        $client_ip_address = wbRequest::getVarClean('client_ip_address', 'str', '');
+        $p_user_loket_id = wbRequest::getVarClean('p_user_loket_id', 'int', 0);
+        $user_name = wbRequest::getVarClean('user_name', 'str', '');
         
         /* make $i_id with comma separated */
         $idList = "";
@@ -93,7 +96,7 @@ class payment_controller extends wbController{
 
             $table->dbconn->fetchMode = PGSQL_NUM;
             $query = "SELECT * FROM ifp.f_pay_acc(?,?,?,?,?,?,?,?,?,?,?,?)"; /* tambahkan subscriber id, use_deposit */
-            $result =& $table->dbconn->Execute($query, array($action, $service_no, $start, $limit, $idList, 2,'ADMIN', $p_bank_branch_id, '192.168.1.7', $i_subscriberid, $cboxdeposit, strtoupper(date("d-M-Y"))));
+            $result =& $table->dbconn->Execute($query, array($action, $service_no, $start, $limit, $idList, $p_user_loket_id, $user_name, $p_bank_branch_id, $client_ip_address, $i_subscriberid, $cboxdeposit, strtoupper(date("d-M-Y"))));
 
             $rows = $result->fields;
 
