@@ -67,7 +67,7 @@ class t_deposit extends AbstractTable{
     public function cancel_deposit_amount($t_deposit_id, $subscriber_id, $p_user_loket_id, $ip_address) {
 
         if(empty($t_deposit_id)) {
-            $query = "SELECT MAX(t_deposit_id) FROM t_deposit WHERE subscriber_id = ?";
+            $query = "SELECT MAX(t_deposit_id) FROM v_t_deposit WHERE subscriber_id = ?";
             $t_deposit_id = $this->dbconn->GetOne($query, array($subscriber_id));
         }
         
