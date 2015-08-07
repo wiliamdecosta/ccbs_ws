@@ -68,29 +68,30 @@ class payment_controller extends wbController{
         $i_id = wbRequest::getVarClean('i_id', 'array', array());
         $i_subscriberid = wbRequest::getVarClean('i_subscriberid', 'int', 0);
         $cboxdeposit = wbRequest::getVarClean('cboxdeposit', 'str', 'N');
-        
+
         $client_ip_address = wbRequest::getVarClean('client_ip_address', 'str', '');
         $p_user_loket_id = wbRequest::getVarClean('p_user_loket_id', 'int', 0);
         $user_name = wbRequest::getVarClean('user_name', 'str', '');
-        
+
         /* make $i_id with comma separated */
         $idList = "";
         $prefix = "";
         foreach ($i_id as $theid){
-            $idList .= $prefix . "'" . $theid . "'";
+            $idList .= $prefix . "'" . substr($theid,0,strpos($theid,"_")) . "'";
             $prefix = ", ";
         }
-        
+
         $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
         $start = ($page-1) * $limit;
-        
+
         /*$data['message'] .= "action: ".$action."</br>";
         $data['message'] .= "service_no: ".$service_no."</br>";
         $data['message'] .= "id: ".$idList."</br>";
         $data['message'] .= "p_bank_branch_id: ".$p_bank_branch_id."</br>";
         return $data;*/
-        
+
         try{
+            
             $items = array();
             $table =& wbModule::getModel('paymentccbs', 'payment');
 
@@ -101,21 +102,28 @@ class payment_controller extends wbController{
             $rows = $result->fields;
 
             if( isset ($rows['cnt']) ) {
-                
+
                 $data['total'] = $rows['cnt'];
                 $data['message'] = $rows['msg'];
                 $data['success'] = true;
-                
+
                 if( $rows['cnt'] == 0 ) {
                     $data['items'] = array();
-                    if(substr($rows['msg'],0,5) == 'ERROR') {
-                        $data['success'] = false;        
+                    if(strtoupper(substr($rows['msg'],0,5)) == 'ERROR') {
+                        $data['success'] = false;
                     }
                 }else {
-                    $data['items'] = array($rows);
+                    $rows = array($rows);
+                    for($i = 0; $i < count($rows); $i++)
+                        $rows[$i]['id'] .= "_".$rows[$i]['account_no'];
+
+                    $data['items'] = $rows;
                 }
-                
+
             }else {
+                for($i = 0; $i < count($rows); $i++)
+                    $rows[$i]['id'] .= "_".$rows[$i]['account_no'];
+
                 $data['items'] = $rows;
                 $data['total'] = $rows[0]['cnt'];
                 $data['message'] = $rows[0]['msg'];
@@ -124,7 +132,7 @@ class payment_controller extends wbController{
 
             $data['current'] = $page;
             $data['rowCount'] = $limit;
-            
+
 
         }catch(Exception $e){
             $data['message'] = $e->getMessage();
