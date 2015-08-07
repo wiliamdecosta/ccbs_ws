@@ -55,7 +55,7 @@ class subscriber_deposit extends AbstractTable{
     
     
     public function get_deposit_amount($subscriber_id) {
-        $sql = "SELECT SUM(deposit_amount) FROM t_deposit WHERE subscriber_id = ?";
+        $sql = "SELECT SUM(deposit_amount) FROM subscriber_deposit WHERE subscriber_id = ?";
         $amount = $this->dbconn->GetOne($sql, array($subscriber_id));
 
         return $amount;
