@@ -54,12 +54,19 @@ class p_user_loket extends AbstractTable{
     }
 
     public function valid_login($user_name, $password) {
-	    
+
 	    if(empty($user_name) or empty($password)) return "";
-	    
-	    $sql = "SELECT p_user_loket_id FROM p_user_loket WHERE user_name = ? AND md5(user_pwd) = ?";
-	    $p_user_loket_id = $this->dbconn->GetOne($sql, array($user_name, $password));
-		
+
+	    /*$sql = "SELECT p_bank_branch_id FROM p_user_loket WHERE user_name = ? AND decrypt(user_pwd) = ?";
+	    $p_bank_branch_id = $this->dbconn->GetOne($sql, array($user_name, $password));
+
+		if(empty($p_bank_branch_id)) {
+		    return "";
+		}*/
+
+		$sql = "select f_login_counter('N', -999, '".$user_name."', '".$password."', '') as hasil";
+		$p_user_loket_id = $this->dbconn->GetOne($sql);
+        
 		return $p_user_loket_id;
 	}
 }
