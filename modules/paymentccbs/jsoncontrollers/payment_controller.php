@@ -51,7 +51,9 @@ class payment_controller extends wbController{
 
 
     public static function stp_pay_acc($args = array()){
-
+               
+        $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
+        
         extract($args);
 
         $page = wbRequest::getVarClean('current', 'int', 1);
@@ -80,8 +82,7 @@ class payment_controller extends wbController{
             $idList .= $prefix . "'" . substr($theid,0,strpos($theid,"_")) . "'";
             $prefix = ", ";
         }
-
-        $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
+        
         $start = ($page-1) * $limit;
 
         /*$data['message'] .= "action: ".$action."</br>";
