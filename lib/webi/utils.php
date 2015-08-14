@@ -434,6 +434,20 @@ class wbUtil extends Object
         return true;
 
     }
+    
+    public function isSessionTimeOut() {
+        
+        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 180)) {
+            
+            // last request was more than 30 minutes ago
+            session_unset();     // unset $_SESSION variable for the run-time 
+            session_destroy();   // destroy session data in storage
+            
+            return true;
+        }
+        return false;
+    }
+    
 }
 
 function debugvar($var){
