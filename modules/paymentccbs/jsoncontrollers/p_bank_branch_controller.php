@@ -9,7 +9,9 @@
 class p_bank_branch_controller extends wbController{
 
     public static function read($args = array()){
-
+        
+        $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
+        
         extract($args);
 
         $page = wbRequest::getVarClean('current', 'int', 1);
@@ -22,7 +24,6 @@ class p_bank_branch_controller extends wbController{
         $p_bank_branch_id = wbRequest::getVarClean('p_bank_branch_id', 'int', 0);
         $p_bank_id = wbRequest::getVarClean('p_bank_id', 'int', 0);
         
-        $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
         $start = ($page-1) * $limit;
 
         try{
