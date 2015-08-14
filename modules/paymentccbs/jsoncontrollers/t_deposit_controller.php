@@ -9,7 +9,8 @@
 class t_deposit_controller extends wbController {
 
     public static function read($args = array()){
-
+        $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
+        
         extract($args);
 
         $page = wbRequest::getVarClean('current', 'int', 1);
@@ -22,7 +23,6 @@ class t_deposit_controller extends wbController {
         $t_deposit_id = wbRequest::getVarClean('t_deposit_id', 'int', 0);
         $subscriber_id = wbRequest::getVarClean('subscriber_id', 'int', 0);
         
-        $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
         $start = ($page-1) * $limit;
 
         try{
@@ -61,6 +61,7 @@ class t_deposit_controller extends wbController {
     
     
     public static function add_deposit($args = array()){
+        $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
         
         $service_no = wbRequest::getVarClean('service_no', 'str', '');
         $account_no = wbRequest::getVarClean('account_no', 'str', '');
@@ -72,7 +73,7 @@ class t_deposit_controller extends wbController {
         $ip_address = wbRequest::getVarClean('ip_address', 'str', get_ip_address());
         
         $result = "";
-        $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
+        
         try{
             $table =& wbModule::getModel('paymentccbs', 't_deposit');
             $result = $table->add_deposit_amount($service_no, $account_no, $subscriber_id, $is_returnable, $deposit_amount, $p_user_loket_id, $ip_address);
@@ -93,6 +94,7 @@ class t_deposit_controller extends wbController {
     }
     
     public static function cancel_deposit($args = array()){
+        $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
         
         $p_user_loket_id = wbRequest::getVarClean('p_user_loket_id', 'int', 0);
         $subscriber_id = wbRequest::getVarClean('subscriber_id', 'int', 0);
@@ -101,7 +103,7 @@ class t_deposit_controller extends wbController {
         $ip_address = wbRequest::getVarClean('ip_address', 'str', get_ip_address());
         
         $result = "";
-        $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
+        
         try{
             $table =& wbModule::getModel('paymentccbs', 't_deposit');
             $result = $table->cancel_deposit_amount($t_deposit_id, $subscriber_id, $p_user_loket_id, $ip_address);
