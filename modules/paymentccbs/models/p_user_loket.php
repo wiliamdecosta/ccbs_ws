@@ -20,7 +20,7 @@ class p_user_loket extends AbstractTable{
     /* Details table */
     public $details = array();
     /* Primary key */
-    public $pkey = '';
+    public $pkey = 'p_user_loket_id';
     /* References */
     public $refs = array();
 

@@ -32,5 +32,29 @@ class p_user_loket_controller extends wbController{
 
         return $data;
     }
+    
+    public static function get_user_loket($args = array()){
+
+        extract($args);
+
+        $p_user_loket_id = wbRequest::getVarClean('p_user_loket_id', 'int', 0);
+
+        try{
+            $items = array();
+            $table =& wbModule::getModel('paymentccbs', 'p_user_loket');
+
+            $data = array('items' => array(), 'total' => 0, 'success' => false, 'message' => '');
+            
+            $data['items'] = $table->get($p_user_loket_id);
+            $data['success'] = true;
+            $data['total'] = 1;
+            $data['message'] = 'berhasil';
+        }catch(Exception $e){
+            $data['message'] = $e->getMessage();
+            $data['success'] = false;
+        }
+
+        return $data;
+    }
 }
 ?>
